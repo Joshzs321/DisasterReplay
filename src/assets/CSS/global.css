@@ -1,0 +1,15 @@
+#app{
+    min-width: 1366px;
+}
+html body {
+    padding: 0;
+    margin: 0;
+}
+/* 纵向居中类 */
+.vcenter{
+    display: flex;
+    align-items: center;
+}
+.scroll-container{
+    overflow-y:auto
+}
