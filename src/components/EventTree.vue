@@ -1,14 +1,20 @@
 <template>
   <div id="tree-container" :class="isActive?'':'close-tree-container'">
-    <h3>灾害事件树</h3>
-    <div class="my-icon-treeCollpse" @click="changeTreeCollpse">
-      <i class="el-icon-d-arrow-right " v-show="treeCollpse" title="收起事件树"></i>
-      <i class="el-icon-d-arrow-left " v-show="!treeCollpse" title="展开事件树"></i>
-    </div>
-    <button @click="addNode">添加节点</button>
-    <div ref="Echart" style="height:450px;width:190px">
+    <dv-border-box-13>
+      <h3 id="tree-header">灾害事件树</h3>
+      <!-- <dv-decoration-7 style="width:150px;height:30px;">灾害事件树</dv-decoration-7> -->
+      <dv-decoration-8 :reverse="true" style="width:165px;height:16px;" />
+      <div class="my-icon-treeCollpse" @click="changeTreeCollpse">
+        <i class="el-icon-d-arrow-right " v-show="treeCollpse" title="收起事件树"></i>
+        <i class="el-icon-d-arrow-left " v-show="!treeCollpse" title="展开事件树"></i>
+      </div>
+      
+      <div ref="Echart" style="height:450px;width:190px">
+      </div>
+      <!-- <dv-decoration-11 style="width:100px;height:30px;">添加节点</dv-decoration-11> -->
+      
+    </dv-border-box-13>
 
-    </div>
   </div>
 </template>
 
@@ -62,7 +68,7 @@ export default {
   },
   methods: {
     addNode() {
-      console.log($('#tree-container'));
+      console.log($("#tree-container"));
       this.treeTestData.children.push({
         children: [],
         name: 123,
@@ -77,7 +83,7 @@ export default {
       if (!this.treeIsExisting) {
         const myCharts = this.$echarts.init(this.$refs.Echart);
         console.log(myCharts);
-        
+
         let options = {
           tooltip: {
             // show：'true',//默认：true；是否显示提示框组件，包括提示框浮层和 axisPointer。
@@ -140,7 +146,7 @@ export default {
 <style scoped>
 .my-icon-treeCollpse {
   color: white;
-  background-color: #02142b;
+  background-color: rgba(2, 20, 43, 0.5);
   position: relative;
   left: 197px;
   display: inline-block;
@@ -161,10 +167,20 @@ h3 {
   left: -200px;
 }
 #tree-container {
-  background-color: #031738;
-  opacity: 0.5;
-  color: #d06468;
+  background-color: rgba(2, 20, 43, 0.5);
+  /* opacity: 0.5; */
+  color: white;
   height: calc(100vh - 280px);
   display: inline-block;
+}
+.dv-decoration-8{
+    position: relative;
+    left: 14px !important;
+    top: 11px
+}
+#tree-header{
+  margin: 0px;
+  position: relative;
+  top: 13px;
 }
 </style>

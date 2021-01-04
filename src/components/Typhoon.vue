@@ -82,7 +82,7 @@ export default {
   justify-content: space-around;
   background-color: #1182EE;
   position: absolute;
-  top: 62px;
+  top: 52px;
   left: 226px;
   color: white;
   font-size: 10px;

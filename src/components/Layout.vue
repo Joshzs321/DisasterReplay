@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="16">
             <div id="header-title">
-              <img style="width: 60px; padding: 0 15px" src="../assets/logo.png" alt="" />
+              <img style="width: 50px; padding: 0 15px" src="../assets/logo.png" alt="" />
               <span id="header-name">自然灾害过程在线系统</span>
             </div>
           </el-col>
@@ -36,7 +36,7 @@
     </el-container>
     <!-- 创建场景面板 -->
     <el-dialog title="事件创建" width="30%" :visible.sync="createEventDialogVisible" :before-close="resetEvent">
-      <span>这是一段信息</span>
+      <CreateEventDialog></CreateEventDialog>
       <span slot="footer" class="dialog-footer">
         <el-button id="table-collapse" @click="createEventDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveEvent">确 定</el-button>
@@ -53,6 +53,7 @@ import PlatArea from "./platArea.vue";
 import Play from "./Play.vue";
 import Typhoon from "./Typhoon.vue";
 import Tool from "./Tool.vue";
+import CreateEventDialog from "./CreateEventDialog.vue";
 export default {
   data() {
     return {
@@ -70,6 +71,7 @@ export default {
     Play,
     Typhoon,
     Tool,
+    CreateEventDialog
   },
   methods: {
     changeTimeLineToShow(){
@@ -114,24 +116,17 @@ export default {
 .progressTimeControl{
   z-index: -1;
 }
-/* .my-arrow-icon {
-  color: white;
-  position: absolute;
-  right: 6px;
-  top: 7px;
-  cursor: pointer;
-} */
+
 #polt-area-container {
   position: absolute;
   bottom: 55px;
   width: 100%;
-  /* height: 210px; */
-  /* opacity: 0.5; */
 }
 .el-header {
   background-color: #00b0f0;
   padding: 0px;
   z-index: 1;
+  height: 50px !important;
 }
 #header-name {
   font-size: 30px;
