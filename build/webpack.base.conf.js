@@ -83,6 +83,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.sass$/,
+        loaders: ['style', 'css', 'scss']
       }
     ]
   },
@@ -108,7 +112,7 @@ module.exports = {
       jQuery: "jquery",
       jquery: "jquery",
       "window.jQuery": "jquery"
-       })
+    })
   ],
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue

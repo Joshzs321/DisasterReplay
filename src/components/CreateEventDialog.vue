@@ -46,7 +46,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="添加场景">
-        <el-button @click="innerVisible = true">+</el-button>
+        <el-button @click="innerVisible=true">+</el-button>
         <!-- 内层dialog -->
         <el-dialog width="45%" title="子场景" :visible.sync="innerVisible" append-to-body>
           <el-form ref="form" label-width="100px">
@@ -80,19 +80,26 @@
             </el-form-item>
             <el-form-item label="场景层次">
               <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                <el-option v-for="item in sceneLevel" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="要素选择">
-              <el-transfer v-model="value" :data="data"></el-transfer>
+              <el-transfer v-model="value" :data="data" :titles="['场景要素', '要素库']"></el-transfer>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">保存</el-button>
+              <el-button type="primary" @click="sceneSubmit">保存</el-button>
               <el-button>取消</el-button>
             </el-form-item>
           </el-form>
         </el-dialog>
+        <el-collapse v-model="activeNames" @change="handleChange">
+          <div v-for="(item,index) in scenesCreated" :key="index">
+            <el-collapse-item :title="item.descibtion" name="1">
+              <div>这是一个新场景</div>
+            </el-collapse-item>
+          </div>
+        </el-collapse>
       </el-form-item>
     </el-form>
   </div>
@@ -102,6 +109,26 @@
 export default {
   data() {
     return {
+      scenesCreated: [],
+
+      sceneLevel: [
+        {
+          value: "GJ",
+          label: "国级",
+        },
+        {
+          value: "SSJ",
+          label: "省/市级",
+        },
+        {
+          value: "CJ",
+          label: "城市级",
+        },
+        {
+          value: "JT",
+          label: "具体地点",
+        },
+      ],
       dialogVisible: false,
       innerVisible: false,
       form: {
@@ -128,7 +155,15 @@ export default {
     //     })
     //     .catch((_) => {});
     // },
-
+    openSceneCreateDialog(){
+      this.innerVisible=true
+    },
+    sceneSubmit() {
+      this.innerVisible = false;
+      this.scenesCreated.push({
+        descibtion:'新场景'
+      })
+    },
     //关闭标签
     handleCloseTag(tag) {
       this.form.themeTags.splice(this.form.themeTags.indexOf(tag), 1);

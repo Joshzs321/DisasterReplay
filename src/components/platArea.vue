@@ -5,7 +5,8 @@
         <div class="plot-box">
           <div class="plot-header">
             <span>灾情动态累计</span>
-            <el-select v-model="disasterData" filterable size="mini" placeholder="请选择地区">
+            <el-select v-model="disasterData" filterable size="mini" placeholder="请选择地区"
+              @change='changeSelectdDisterArea'>
               <el-option-group v-for="group in disasterOption" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
@@ -13,7 +14,35 @@
             </el-select>
           </div>
           <div class='plot-container'>
-            <dv-capsule-chart :config="disasterDatatoShow" style="width:100%;height:140px;" />
+            <!-- <div v-for="(item,index ) in disasterDatatoShow " :key='index'> -->
+            <!-- <dv-border-box-8> -->
+            <!-- <el-tooltip class="item" effect="dark" :content="'单位:'+item.data[0].unit" placement="right"> -->
+            <!-- <dv-capsule-chart :config="item" showValue='true' style="width:100%;height:28px;" />
+                 -->
+            <!-- <dv-active-ring-chart :config="item" style="width:40px;height:40px" />
+                  -->
+            <!-- <el-badge :value="item.data[0].value" class="item">
+                    <i >{{item.data[0].name}}</i>
+                  </el-badge> -->
+            <!-- <span style="color:white">{{item.data[0].name}}</span>
+                  <span style="color:red">{{item.data[0].value}} </span> -->
+            <!-- </el-tooltip> -->
+            <el-table ref="singleTable" :data="disasterDatatoShow[selectdDisterArea]" highlight-current-row
+              style="width: 100%" size='mini' row-class-name='row-class' header-row-class-name='table-header-class'
+              max-height='140px'>
+              <el-table-column type="index" width="50">
+              </el-table-column>
+              <el-table-column property="name" label="灾情项" width="150">
+              </el-table-column>
+              <el-table-column property="value" label="数量" width="150">
+              </el-table-column>
+              <el-table-column property="unit" label="单位" width="50">
+              </el-table-column>
+            </el-table>
+            <!-- </dv-border-box-8> -->
+
+            <!-- </div> -->
+
           </div>
         </div>
       </el-col>
@@ -21,8 +50,9 @@
         <div class="plot-box">
           <div class="plot-header">
             <span>灾情累计排名</span>
-            <el-select v-model="antidisasterData" filterable size="mini" placeholder="请选择地区">
-              <el-option-group v-for="group in antidisasterOption" :key="group.label" :label="group.label">
+            <el-select v-model="antidisasterData" filterable size="mini" placeholder="请选择灾情项"
+              @change="changeSelectedDisasterItem">
+              <el-option-group v-for="group in compareDisasterOption" :key="group.label" :label="group.label">
                 <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-option-group>
@@ -30,7 +60,8 @@
           </div>
           <div class='plot-container'>
             <dv-scroll-ranking-boards />
-            <dv-scroll-ranking-board class="ranking" :config="compareDatatoShow" style="width:100%;height:140px;" />
+            <dv-scroll-ranking-board class="ranking" :config="compareDatatoShow[selectdDisasterItem]"
+              style="width:100%;height:140px;" />
           </div>
         </div>
 
@@ -58,6 +89,7 @@
           <div class="plot-header">
             <span>抗灾救灾累计描述</span>
           </div>
+          
           <div class='plot-container scroll-container'>
             <div v-for="(item ,index) in disasterReport" :key="index">
               <div id="disaster-report">
@@ -65,8 +97,9 @@
               </div>
               <div id="report-data">
                 <div v-for="(dataItem,index) in item.datas" :key="index">
-                  <el-tooltip class="item" effect="dark" :content="dataItem.item+dataItem.value+dataItem.unit" placement="left">
-                     <dv-decoration-9 style="width:40px;height:40px;">{{dataItem.value}}</dv-decoration-9>
+                  <el-tooltip class="item" effect="dark" :content="dataItem.item+dataItem.value+dataItem.unit"
+                    placement="left">
+                    <dv-decoration-9 style="width:40px;height:40px;">{{dataItem.value}}</dv-decoration-9>
                   </el-tooltip>
                 </div>
               </div>
@@ -81,12 +114,14 @@
 </template>
 
 <script>
+/* eslint-disable */
 export default {
   data() {
     return {
+      selectdDisasterItem: "",
+      selectdDisterArea: [],
       disasterReport: [
         {
-
           describetion:
             "省国土资源厅将地质灾害隐患点和风险危险区域范围提供给当地政府，并配合当地政府迅速转移受地质灾害威胁的群众，截至18日17时，广东省自然资源系统共出动巡查排查人员46609人次，组织转移避险人员124839人，共排查地灾隐患点6169处，发现新增地灾隐患点38处。",
           datas: [
@@ -111,7 +146,8 @@ export default {
               unit: "处",
             },
           ],
-        },{
+        },
+        {
           describetion:
             "省民政厅共派出工作组3953个，开放应急避难场所5320个，转移安置共9.02万人，调拨帐篷735顶、折叠床3312床、棉被2000床等物资。",
           datas: [
@@ -135,70 +171,142 @@ export default {
               value: "735",
               unit: "顶",
             },
-             {
+            {
               item: "折叠床",
               value: "3312",
               unit: "床",
             },
-             {
+            {
               item: "棉被",
               value: "2000",
               unit: "床",
-            }
+            },
           ],
-        }
+        },
       ],
       disasterDatatoShow: {
-        data: [
+        guangdong: [
           {
-            name: "南阳",
-            value: 167,
+            name: "死亡人口",
+            value: 1,
+            unit: "人",
           },
           {
-            name: "周口",
+            name: "受伤人口",
             value: 67,
+            unit: "人",
           },
           {
-            name: "漯河",
-            value: 123,
+            name: "转移安置人口",
+            value: 45.246,
+            unit: "千人",
           },
           {
-            name: "郑州",
+            name: "农田受损面积",
             value: 55,
+            unit: "公顷",
           },
           {
-            name: "西峡",
+            name: "渔场受损面积",
             value: 98,
+            unit: "公顷",
+          },
+        ],
+        guangzhou: [
+          {
+            name: "死亡人口",
+            value: 1,
+            unit: "人",
+          },
+          {
+            name: "受伤人口",
+            value: 35,
+            unit: "人",
+          },
+          {
+            name: "转移安置人口",
+            value: 23.654,
+            unit: "千人",
+          },
+          {
+            name: "农田受损面积",
+            value: 33,
+            unit: "公顷",
+          },
+          {
+            name: "渔场受损面积",
+            value: 45,
+            unit: "公顷",
           },
         ],
       },
       compareDatatoShow: {
-        data: [
-          {
-            name: "周口",
-            value: 55123,
-          },
-          {
-            name: "南阳",
-            value: 12022,
-          },
-          {
-            name: "西峡",
-            value: 78932,
-          },
-          {
-            name: "驻马店",
-            value: 63411,
-          },
-          {
-            name: "新乡",
-            value: 44231,
-          },
-          {
-            name: "dad",
-            value: 33231,
-          },
-        ],
+        NZWSS: {
+          unit: "公顷",
+          data: [
+            {
+              name: "湛江",
+              value: 33,
+            },
+            {
+              name: "广州",
+              value: 11,
+            },
+            {
+              name: "茂名",
+              value: 56,
+            },
+            {
+              name: "深圳",
+              value: 41,
+            },
+            {
+              name: "佛山",
+              value: 10,
+            },
+            {
+              name: "江门",
+              value: 54,
+            },
+            {
+              name: "珠海",
+              value: 6,
+            },
+          ],
+        },
+        ZYRS: {
+          unit: "人",
+          data: [
+            {
+              name: "湛江",
+              value: 55123,
+            },
+            {
+              name: "广州",
+              value: 23654,
+            },
+            {
+              name: "茂名",
+              value: 78932,
+            },
+            {
+              name: "深圳",
+              value: 63411,
+            },
+            {
+              name: "佛山",
+              value: 44231,
+            },
+            {
+              name: "江门",
+              value: 33231,
+            },
+            {
+              name: "珠海",
+              value: 15424,
+            },
+          ],
+        },
         // unit: "单位",
         // valueFormatter({ value }) {
         //   console.warn(arguments);
@@ -254,7 +362,7 @@ export default {
             },
             {
               value: "zhuhai",
-              label: "珠珠海江",
+              label: "珠海",
             },
             {
               value: "foshan",
@@ -272,21 +380,22 @@ export default {
         },
       ],
       antidisasterData: [],
-      antidisasterOption: [
+      compareDisasterOption: [
         {
-          label: "省份",
+          label: "承载体",
           options: [
             {
-              value: "guangdong",
-              label: "广东",
+              value: "SWRS",
+              label: "死亡人数",
             },
             {
-              value: "guangxi",
-              label: "广西",
+              value: "SSRS",
+              label: "受伤人数",
             },
+            { value: "ZYRS", label: "转移人数" },
             {
-              value: "hainan",
-              label: "海南",
+              value: "NZWSS",
+              label: "农作物受损",
             },
           ],
         },
@@ -420,6 +529,12 @@ export default {
     };
   },
   methods: {
+    changeSelectedDisasterItem(name) {
+      this.selectdDisasterItem = name;
+    },
+    changeSelectdDisterArea(name) {
+      this.selectdDisterArea = name;
+    },
     loadStationChart(station) {
       this.$echarts.init(this.$refs.stationChart).dispose();
       let myCharts1 = this.$echarts.init(this.$refs.stationChart);
@@ -488,6 +603,9 @@ export default {
 </script>
 
 <style scoped>
+.dv-capsule-chart >>> .unit-label {
+  display: none;
+}
 #disaster-report {
   color: white;
   font-size: 12px;
@@ -539,5 +657,21 @@ export default {
   padding: 0px 5px;
   /* opacity: 0.5; */
   background-color: rgba(2, 20, 43, 0.5);
+}
+.el-table >>> .row-class {
+  color: white;
+  background-color: rgba(2, 20, 43, 1);
+}
+
+.el-table >>> .current-row > td {
+  background: rgba(0, 158, 250, 0.219) !important;
+}
+.el-table >>> tbody tr:hover > td {
+  background-color: rgba(0, 158, 250, 0.219) !important;
+}
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
+.el-table__body tr.current-row > td {
+  color: #fff;
+  background-color: #a2a4a7 !important;
 }
 </style>

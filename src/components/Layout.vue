@@ -6,12 +6,12 @@
           <el-col :span="16">
             <div id="header-title">
               <img style="width: 50px; padding: 0 15px" src="../assets/logo.png" alt="" />
-              <span id="header-name">自然灾害过程在线系统</span>
+              <span id="header-name">台风灾害演化过程再现系统</span>
             </div>
           </el-col>
           <el-col :span="8">
             <div id="header-menu-container">
-              <el-link icon="el-icon-edit-outline" @click="openCreateEventDialog">场景创建</el-link>
+              <el-link icon="el-icon-edit-outline" @click="openCreateEventDialog">事件创建</el-link>
               <el-link icon="el-icon-video-camera" @click="changeTimeLineToShow">事件播放</el-link>
                <el-link icon="el-icon-document">事件报告</el-link>
               <el-link icon="el-icon-s-open" @click="handleMapTool">地图工具</el-link>
@@ -36,12 +36,13 @@
     </el-container>
     <!-- 创建场景面板 -->
     <el-dialog title="事件创建" width="30%" :visible.sync="createEventDialogVisible" :before-close="resetEvent">
-      <CreateEventDialog></CreateEventDialog>
+      <CreateEventDialog ref='eventCreateDialog'></CreateEventDialog>
       <span slot="footer" class="dialog-footer">
         <el-button id="table-collapse" @click="createEventDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="saveEvent">确 定</el-button>
       </span>
     </el-dialog>
+    
   </div>
 </template>
 
@@ -54,6 +55,7 @@ import Play from "./Play.vue";
 import Typhoon from "./Typhoon.vue";
 import Tool from "./Tool.vue";
 import CreateEventDialog from "./CreateEventDialog.vue";
+
 export default {
   data() {
     return {
@@ -71,7 +73,8 @@ export default {
     Play,
     Typhoon,
     Tool,
-    CreateEventDialog
+    CreateEventDialog,
+    
   },
   methods: {
     changeTimeLineToShow(){
@@ -98,6 +101,7 @@ export default {
       // 显示事件树
       // this.treeToshow=true
       this.$refs.eventTree.createTreeNode();
+      this.$refs.eventCreateDialog.scenesCreated=[]
     },
     changePlotAreaToShow() {
       this.plotAreaToShow = !this.plotAreaToShow;
