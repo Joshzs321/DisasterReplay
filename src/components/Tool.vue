@@ -24,7 +24,8 @@
 
 <script>
 import Bus from "../common/bus.js";
-import WindCircle from '../common/utils/windCircle'
+import WindCircle from '../common/utils/WindCircle'
+import TyphoonPath from '../common/utils/TyphoonPath'
 var url0 = require("../assets/img/tool0.png");
 var url1 = require("../assets/img/tool1.png");
 var url2 = require("../assets/img/tool2.png");
@@ -150,7 +151,9 @@ export default {
     showTyphoon() {
       Bus.$emit("brotherEvent", "data");
       let windCircle=new WindCircle(window.viewer)
+      let typhoonPath=new TyphoonPath(window.viewer)
       windCircle.loadDate()
+      typhoonPath.loadDate(this.$store.state.typhoonTestData)
     },
     handleTooltip() {
       this.tooltipDisable = !this.tooltipDisable;

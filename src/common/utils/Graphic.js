@@ -137,6 +137,7 @@ class CesiumBillboard extends BaseGraphic {
             gvid: this.gvid,
             position: self.position,
             billboard: options,
+            properties:{test:'test'},
             label: labelOption
         }
         this.graphic = undefined;

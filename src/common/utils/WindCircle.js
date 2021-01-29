@@ -1,5 +1,5 @@
 const Cesium=window.Cesium
-class windCircle {
+class WindCircle {
     constructor(viewer) {
         this.viewer = viewer
     }
@@ -122,4 +122,4 @@ class windCircle {
         return positionArr;
     }
 }
-export default windCircle
+export default WindCircle

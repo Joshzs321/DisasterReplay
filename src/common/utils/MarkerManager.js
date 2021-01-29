@@ -104,6 +104,7 @@ export default class MarkerManager {
             console.log('showTip');
             
             const obj = viewer.scene.pick(e.position);
+            console.log('obj: ', obj);
             if (
                 defined(obj) &&
                 obj.id instanceof Cesium.Entity &&

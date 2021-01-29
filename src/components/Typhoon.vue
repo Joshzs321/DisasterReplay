@@ -69,6 +69,7 @@ export default {
     }
   },
   mounted(){
+    // 测试bus进行兄弟组件间通信
     Bus.$on('brotherEvent',(data)=>{
         this.TyphoonToShow=!this.TyphoonToShow
     })

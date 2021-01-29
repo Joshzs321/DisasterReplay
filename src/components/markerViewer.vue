@@ -62,7 +62,7 @@
                     </el-aside> -->
             </el-container>
           </el-tab-pane>
-          <el-tab-pane label="属性">
+          <el-tab-pane label="属性信息">
             <el-container id="marker-panel">
               <el-table :data="propertyData" border :stripe='true' :cell-style='tableRowStyle' max-height='145px'
                 :show-header='false' style="width: 100%">
@@ -117,6 +117,7 @@
 
 <script>
 import MarkerManager from "../common/utils/MarkerManager";
+import EntityManager from "../common/EntityManager";
 import utils from "../common/utils/utils";
 import { checkComponent, checkViewer } from "../common/utils/utils";
 
@@ -250,17 +251,23 @@ export default {
   },
   methods: {
     // 这个方法在父组件中调用的
-    init(viewer) {
+    init(viewer,flag) {
       if (this._viewer) {
         return;
       }
       checkViewer(viewer);
       this._viewer = viewer;
-      // 在生成markerManager的时候就绑定了一个左击鼠标生成pop窗口的事件
-      !this.markerManager && (this.markerManager = new MarkerManager(viewer));
-      // 可选择的marker：从最外面的组件传进来的
-      this.images = [this.markerManager.defaultImage, ...this.extendImage];
-      this.selectedImage = this.markerManager.defaultImage;
+      // 在生成markerManager/entityManager的时候就绑定了一个左击鼠标生成pop窗口的事件
+      // markerViewer在两个地方复用，根据使用场所的不同有不同的处理逻辑
+      if (flag == "createMode" && !this.markerManager) {
+        this.markerManager = new MarkerManager(viewer);
+        // 可选择的marker：从最外面的组件传进来的
+        this.images = [this.markerManager.defaultImage, ...this.extendImage];
+        this.selectedImage = this.markerManager.defaultImage;
+      } else {
+        this.entityManager = new EntityManager(viewer)
+        this.propertyData
+      }
     },
     addProperty() {
       var newProperty = {

@@ -216,7 +216,7 @@ export default {
       this._depthTestAgainstTerrain =viewer.scene.globe.depthTestAgainstTerrain;
       // 初始化markerViewer
       // 为什么不直接在初始化markerViewer的生命周期里初始化呢
-      this.$refs.markerManager.init(viewer);
+      this.$refs.markerManager.init(viewer,'createMode');
       graphicManager = new GraphicManager(viewer);
       this.selectedModel = this.extendMarkerModel.length
         ? this.extendMarkerModel[0].url
