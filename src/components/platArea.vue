@@ -88,10 +88,14 @@
         <div class="plot-box">
           <div class="plot-header">
             <span>抗灾救灾累计描述</span>
+            <el-switch v-model="SpectialInfoToShow" active-color="#13ce66" inactive-color="#ff4949"
+              @change="changeSpectialInfo">
+            </el-switch>
           </div>
-          
+
           <div class='plot-container scroll-container'>
-            <div v-for="(item ,index) in disasterReport" :key="index">
+            <div v-for="(item ,index) in disasterReportTest" :key="index" :id="'spetial-Info'+index"
+              class="spetial-info-item">
               <div id="disaster-report">
                 {{item.describetion}}
               </div>
@@ -115,71 +119,80 @@
 
 <script>
 /* eslint-disable */
+import $ from 'jquery'
+import { request } from '../common/requestApi'
+import {myflyto} from '../common/CesiumTool'
+// var dataUrl = require('../assets/data/geological_disasters.json')
+// var imgUrl = require('../assets/data/disasterPoint.png')
+var Cesium = window.Cesium
 export default {
   data() {
     return {
-      selectdDisasterItem: "",
+      SpectialInfo: [],
+      activeChapterName: 'spetial-Info1',
+      SpectialInfoToShow: false,
+      selectdDisasterItem: '',
       selectdDisterArea: [],
-      disasterReport: [
+      disasterReportTest: [
         {
           describetion:
-            "省国土资源厅将地质灾害隐患点和风险危险区域范围提供给当地政府，并配合当地政府迅速转移受地质灾害威胁的群众，截至18日17时，广东省自然资源系统共出动巡查排查人员46609人次，组织转移避险人员124839人，共排查地灾隐患点6169处，发现新增地灾隐患点38处。",
+            '省国土资源厅将地质灾害隐患点和风险危险区域范围提供给当地政府，并配合当地政府迅速转移受地质灾害威胁的群众，截至18日17时，广东省自然资源系统共出动巡查排查人员46609人次，组织转移避险人员124839人，共排查地灾隐患点6169处，发现新增地灾隐患点38处。',
           datas: [
             {
-              item: "排查人员",
-              value: "46609",
-              unit: "人次",
+              item: '排查人员',
+              value: '46609',
+              unit: '人次',
             },
             {
-              item: "转移避险人员",
-              value: "124839",
-              unit: "人",
+              item: '转移避险人员',
+              value: '124839',
+              unit: '人',
             },
             {
-              item: "排查地灾隐患点",
-              value: "6169",
-              unit: "处",
+              item: '排查地灾隐患点',
+              value: '6169',
+              unit: '处',
             },
             {
-              item: "新增地灾隐患点",
-              value: "38",
-              unit: "处",
+              item: '新增地灾隐患点',
+              value: '38',
+              unit: '处',
             },
           ],
         },
         {
           describetion:
-            "省民政厅共派出工作组3953个，开放应急避难场所5320个，转移安置共9.02万人，调拨帐篷735顶、折叠床3312床、棉被2000床等物资。",
+            '省民政厅共派出工作组3953个，开放应急避难场所5320个，转移安置共9.02万人，调拨帐篷735顶、折叠床3312床、棉被2000床等物资。',
           datas: [
             {
-              item: "派出工作组",
-              value: "3953",
-              unit: "个",
+              item: '派出工作组',
+              value: '3953',
+              unit: '个',
             },
             {
-              item: "应急避难场所",
-              value: "5320",
-              unit: "个",
+              item: '应急避难场所',
+              value: '5320',
+              unit: '个',
             },
             {
-              item: "安置人员",
-              value: "9.02",
-              unit: "万人",
+              item: '安置人员',
+              value: '9.02',
+              unit: '万人',
             },
             {
-              item: "帐篷",
-              value: "735",
-              unit: "顶",
+              item: '帐篷',
+              value: '735',
+              unit: '顶',
             },
             {
-              item: "折叠床",
-              value: "3312",
-              unit: "床",
+              item: '折叠床',
+              value: '3312',
+              unit: '床',
             },
             {
-              item: "棉被",
-              value: "2000",
-              unit: "床",
+              item: '棉被',
+              value: '2000',
+              unit: '床',
             },
           ],
         },
@@ -187,122 +200,122 @@ export default {
       disasterDatatoShow: {
         guangdong: [
           {
-            name: "死亡人口",
+            name: '死亡人口',
             value: 1,
-            unit: "人",
+            unit: '人',
           },
           {
-            name: "受伤人口",
+            name: '受伤人口',
             value: 67,
-            unit: "人",
+            unit: '人',
           },
           {
-            name: "转移安置人口",
+            name: '转移安置人口',
             value: 45.246,
-            unit: "千人",
+            unit: '千人',
           },
           {
-            name: "农田受损面积",
+            name: '农田受损面积',
             value: 55,
-            unit: "公顷",
+            unit: '公顷',
           },
           {
-            name: "渔场受损面积",
+            name: '渔场受损面积',
             value: 98,
-            unit: "公顷",
+            unit: '公顷',
           },
         ],
         guangzhou: [
           {
-            name: "死亡人口",
+            name: '死亡人口',
             value: 1,
-            unit: "人",
+            unit: '人',
           },
           {
-            name: "受伤人口",
+            name: '受伤人口',
             value: 35,
-            unit: "人",
+            unit: '人',
           },
           {
-            name: "转移安置人口",
+            name: '转移安置人口',
             value: 23.654,
-            unit: "千人",
+            unit: '千人',
           },
           {
-            name: "农田受损面积",
+            name: '农田受损面积',
             value: 33,
-            unit: "公顷",
+            unit: '公顷',
           },
           {
-            name: "渔场受损面积",
+            name: '渔场受损面积',
             value: 45,
-            unit: "公顷",
+            unit: '公顷',
           },
         ],
       },
       compareDatatoShow: {
         NZWSS: {
-          unit: "公顷",
+          unit: '公顷',
           data: [
             {
-              name: "湛江",
+              name: '湛江',
               value: 33,
             },
             {
-              name: "广州",
+              name: '广州',
               value: 11,
             },
             {
-              name: "茂名",
+              name: '茂名',
               value: 56,
             },
             {
-              name: "深圳",
+              name: '深圳',
               value: 41,
             },
             {
-              name: "佛山",
+              name: '佛山',
               value: 10,
             },
             {
-              name: "江门",
+              name: '江门',
               value: 54,
             },
             {
-              name: "珠海",
+              name: '珠海',
               value: 6,
             },
           ],
         },
         ZYRS: {
-          unit: "人",
+          unit: '人',
           data: [
             {
-              name: "湛江",
+              name: '湛江',
               value: 55123,
             },
             {
-              name: "广州",
+              name: '广州',
               value: 23654,
             },
             {
-              name: "茂名",
+              name: '茂名',
               value: 78932,
             },
             {
-              name: "深圳",
+              name: '深圳',
               value: 63411,
             },
             {
-              name: "佛山",
+              name: '佛山',
               value: 44231,
             },
             {
-              name: "江门",
+              name: '江门',
               value: 33231,
             },
             {
-              name: "珠海",
+              name: '珠海',
               value: 15424,
             },
           ],
@@ -325,56 +338,56 @@ export default {
       disasterData: [],
       disasterOption: [
         {
-          label: "受灾省份",
+          label: '受灾省份',
           options: [
             {
-              value: "guangdong",
-              label: "广东",
+              value: 'guangdong',
+              label: '广东',
             },
             {
-              value: "guangxi",
-              label: "广西",
+              value: 'guangxi',
+              label: '广西',
             },
             {
-              value: "hainan",
-              label: "海南",
+              value: 'hainan',
+              label: '海南',
             },
           ],
         },
         {
-          label: "受灾县市",
+          label: '受灾县市',
           options: [
             {
-              value: "guangzhou",
-              label: "广州",
+              value: 'guangzhou',
+              label: '广州',
             },
             {
-              value: "Shenzhen",
-              label: "深圳",
+              value: 'Shenzhen',
+              label: '深圳',
             },
             {
-              value: "jiangmen",
-              label: "江门",
+              value: 'jiangmen',
+              label: '江门',
             },
             {
-              value: "zhanjiang",
-              label: "湛江",
+              value: 'zhanjiang',
+              label: '湛江',
             },
             {
-              value: "zhuhai",
-              label: "珠海",
+              value: 'zhuhai',
+              label: '珠海',
             },
             {
-              value: "foshan",
-              label: "佛山",
+              value: 'foshan',
+              label: '佛山',
             },
             {
-              value: "maoming",
-              label: "茂名",
+              value: 'maoming',
+              label: '茂名',
             },
             {
-              value: "xianggang",
-              label: "香港",
+              value: 'xianggang',
+              label: '香港',
             },
           ],
         },
@@ -382,195 +395,195 @@ export default {
       antidisasterData: [],
       compareDisasterOption: [
         {
-          label: "承载体",
+          label: '承载体',
           options: [
             {
-              value: "SWRS",
-              label: "死亡人数",
+              value: 'SWRS',
+              label: '死亡人数',
             },
             {
-              value: "SSRS",
-              label: "受伤人数",
+              value: 'SSRS',
+              label: '受伤人数',
             },
-            { value: "ZYRS", label: "转移人数" },
+            { value: 'ZYRS', label: '转移人数' },
             {
-              value: "NZWSS",
-              label: "农作物受损",
+              value: 'NZWSS',
+              label: '农作物受损',
             },
           ],
         },
         {
-          label: "县市",
+          label: '县市',
           options: [
             {
-              value: "guangzhou",
-              label: "广州",
+              value: 'guangzhou',
+              label: '广州',
             },
             {
-              value: "Shenzhen",
-              label: "深圳",
+              value: 'Shenzhen',
+              label: '深圳',
             },
             {
-              value: "jiangmen",
-              label: "江门",
+              value: 'jiangmen',
+              label: '江门',
             },
             {
-              value: "zhanjiang",
-              label: "湛江",
+              value: 'zhanjiang',
+              label: '湛江',
             },
             {
-              value: "zhuhai",
-              label: "珠珠海江",
+              value: 'zhuhai',
+              label: '珠珠海江',
             },
             {
-              value: "foshan",
-              label: "佛山",
+              value: 'foshan',
+              label: '佛山',
             },
             {
-              value: "maoming",
-              label: "茂名",
+              value: 'maoming',
+              label: '茂名',
             },
             {
-              value: "xianggang",
-              label: "香港",
+              value: 'xianggang',
+              label: '香港',
             },
           ],
-          label: "应急部门",
+          label: '应急部门',
           options: [
             {
               value: 1,
-              label: "广东省消防大队",
+              label: '广东省消防大队',
             },
             {
               value: 2,
-              label: "广东省民政局",
+              label: '广东省民政局',
             },
             {
               value: 3,
-              label: "广东省公安局",
+              label: '广东省公安局',
             },
             {
               value: 4,
-              label: "广东省海事局",
+              label: '广东省海事局',
             },
             {
               value: 5,
-              label: "广东省气象局",
+              label: '广东省气象局',
             },
           ],
         },
       ],
-      station: "",
+      station: '',
       stationType: [
         {
-          label: "气象站",
+          label: '气象站',
           options: [
             {
-              value: "001",
-              label: "50621",
+              value: '001',
+              label: '50621',
             },
             {
-              value: "002",
-              label: "54621",
+              value: '002',
+              label: '54621',
             },
             {
-              value: "003",
-              label: "54615",
+              value: '003',
+              label: '54615',
             },
           ],
         },
         {
-          label: "验潮站",
+          label: '验潮站',
           options: [
             {
-              value: "zhuhai",
-              label: "珠海",
+              value: 'zhuhai',
+              label: '珠海',
             },
             {
-              value: "shantou",
-              label: "汕头",
+              value: 'shantou',
+              label: '汕头',
             },
             {
-              value: "jiangmen",
-              label: "江门",
+              value: 'jiangmen',
+              label: '江门',
             },
             {
-              value: "zhanjiang",
-              label: "湛江",
+              value: 'zhanjiang',
+              label: '湛江',
             },
             {
-              value: "foshan",
-              label: "佛山",
+              value: 'foshan',
+              label: '佛山',
             },
             {
-              value: "maoming",
-              label: "茂名",
+              value: 'maoming',
+              label: '茂名',
             },
           ],
         },
         {
-          label: "海上浮标",
+          label: '海上浮标',
           options: [
             {
-              value: "101",
-              label: "ZH101",
+              value: '101',
+              label: 'ZH101',
             },
             {
-              value: "102",
-              label: "ZH102",
+              value: '102',
+              label: 'ZH102',
             },
             {
-              value: "103",
-              label: "SZ101",
+              value: '103',
+              label: 'SZ101',
             },
           ],
         },
       ],
-    };
+    }
   },
   methods: {
     changeSelectedDisasterItem(name) {
-      this.selectdDisasterItem = name;
+      this.selectdDisasterItem = name
     },
     changeSelectdDisterArea(name) {
-      this.selectdDisterArea = name;
+      this.selectdDisterArea = name
     },
     loadStationChart(station) {
-      this.$echarts.init(this.$refs.stationChart).dispose();
-      let myCharts1 = this.$echarts.init(this.$refs.stationChart);
-      var base = +new Date(2014, 9, 3);
-      var oneDay = 24 * 3600 * 1000;
-      var date = [];
+      this.$echarts.init(this.$refs.stationChart).dispose()
+      let myCharts1 = this.$echarts.init(this.$refs.stationChart)
+      var base = +new Date(2014, 9, 3)
+      var oneDay = 24 * 3600 * 1000
+      var date = []
 
-      var data = [Math.random() * 150];
-      var now = new Date(base);
+      var data = [Math.random() * 150]
+      var now = new Date(base)
 
       function addData(shift) {
-        now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join("/");
-        date.push(now);
-        data.push((Math.random() - 0.4) * 10);
+        now = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/')
+        date.push(now)
+        data.push((Math.random() - 0.4) * 10)
 
         if (shift) {
-          date.shift();
-          data.shift();
+          date.shift()
+          data.shift()
         }
 
-        now = new Date(+new Date(now) + oneDay);
+        now = new Date(+new Date(now) + oneDay)
       }
 
       for (var i = 1; i < 100; i++) {
-        addData();
+        addData()
       }
 
       let option = {
         xAxis: {
-          type: "category",
+          type: 'category',
           boundaryGap: false,
           data: date,
         },
         yAxis: {
-          boundaryGap: [0, "50%"],
-          type: "value",
+          boundaryGap: [0, '50%'],
+          type: 'value',
         },
         grid: {
           x: 20,
@@ -581,28 +594,113 @@ export default {
         },
         series: [
           {
-            name: "成交",
-            type: "line",
+            name: '成交',
+            type: 'line',
             smooth: true,
-            symbol: "none",
-            stack: "a",
+            symbol: 'none',
+            stack: 'a',
             areaStyle: {
               normal: {},
             },
             data: data,
           },
         ],
-      };
+      }
       var timer = setInterval(function () {
-        addData(true);
-        myCharts1.setOption(option);
-      }, 500);
+        addData(true)
+        myCharts1.setOption(option)
+      }, 500)
+    },
+    changeSpectialInfo() {
+      if (this.SpectialInfoToShow) {
+        var _this = this
+        $('.scroll-container').scroll(function () {
+          var chapter = _this.disasterReportTest
+          for (let i = 0; i < chapter.length; i++) {
+            if (_this.isScrollShow('spetial-Info' + i)) {
+              _this.setActiveChapter(chapter[i], i)
+            }
+          }
+        })
+      }
+    },
+    // 这是scoll相对于window的判断
+    // isElementOnScreen(id) {
+    //   var element = document.getElementById(id)
+    //   console.log(element)
+    //   var bounds = element.getBoundingClientRect()
+    //   var top = window.innerHeight - bounds.top
+    //   console.log('top: ', top)
+    //   var bottom = window.innerHeight - bounds.bottom
+    //   console.log(' bottom: ', bottom)
+    //   return top < 150 && bottom > 49
+    // },
+
+    setActiveChapter(spetialInfoItem, index) {
+      var chapterName = 'spetial-Info' + index
+      if (chapterName === this.activeChapterName) return
+      this.activeChapterName = chapterName
+      // myflyto(this.$store.state.view[spetialInfoItem.area]);
+      myflyto(window.viewer,112.91, 19.71, 382257, 1.0, 341.34, -56.87, 0)
+      viewer.entities.removeAll()
+      var promise = Cesium.GeoJsonDataSource.load(dataUrl)
+      promise.then(function (dataSource) {
+        var entities = dataSource.entities.values
+        for (var i = 0; i < entities.length; i++) {
+          var entity = entities[i]
+          var entity1 = viewer.entities.add({
+            name: entity._name,
+            id: 'disasterPoint' + i,
+            position: entity._position,
+            billboard: {
+              image: imgUrl,
+              width: 20,
+              height: 20,
+              distanceDisplayCondition: new Cesium.DistanceDisplayCondition(
+                0,
+                5000000
+              ),
+            },
+          })
+          entity1.merge(entity)
+        }
+      })
+    },
+    // 判断spetial-info-item是否被遮挡，相对于父元素
+    isScrollShow(id) {
+      var elem = document.getElementById(id)
+      var bounds = elem.getBoundingClientRect()
+      var elemHeight = bounds.bottom - bounds.top
+      var show = true
+      var pBounds = elem.parentElement.getBoundingClientRect() //这里需要根据结构重新写
+      if (
+        pBounds.top - (1 / 2) * elemHeight > bounds.top ||
+        pBounds.bottom + (1 / 2) * elemHeight < bounds.bottom
+      ) {
+        show = false
+      }
+      return show
     },
   },
-};
+  mounted() {
+    // 打开灾害数据显示面板的时候去请求灾情统计数据
+    // 但是动态变化展示的灾情数据应该在点击事件播放的时候去请求
+    // 创建脚本的时候，数据直接放入vuex中，只有加载脚本的时候才发起请求
+    // request.loadSpectialInfo((data) => {
+    //   this.disasterReport = data
+    // })
+    var viewer = window.viewer
+  },
+}
 </script>
 
 <style scoped>
+.spetial-info-item {
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .dv-capsule-chart >>> .unit-label {
   display: none;
 }

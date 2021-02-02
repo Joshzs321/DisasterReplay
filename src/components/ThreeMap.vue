@@ -21,10 +21,14 @@ import * as Cesium from 'cesium'
 import "cesium/Build/Cesium/Widgets/widgets.css";
 import viewerCesiumNavigationMixin from "@znemz/cesium-navigation";
 import "@znemz/cesium-navigation/dist/index.css";
+console.log('threeMap-import');
+
 // 所有组件中的import的逻辑js代码都会在系统初始化时先加载？
 window.Cesium = Cesium
 export default {
   mounted() {
+    console.log('threeMap');
+    
     this.initViewer();
   },
   methods: {
@@ -37,8 +41,8 @@ export default {
         homeButton: false,
         navigationHelpButton: false,
         sceneModePicker: false,
-        timeline: false,
-        animation: false,
+        // timeline: false,
+        // animation: false,
         selectionIndicator:false,
         imageryProvider: new Cesium.UrlTemplateImageryProvider({
         url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -50,6 +54,9 @@ export default {
         //     "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
         // }),
       });
+
+      // viewer.extend(Cesium.viewerCesiumInspectorMixin);
+      // viewer.cesiumInspector.container.style.display = "";
 
       window.viewer = viewer;
       viewer._cesiumWidget._creditContainer.style.display = "none";

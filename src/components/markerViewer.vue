@@ -1,11 +1,3 @@
-<!--
- * @Author: zhangbo
- * @E-mail: xtfge_0915@163.com
- * @Date: 2019-12-18 10:32:33
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-17 13:42:02
- * @Desc: 包括点标绘、文字标绘、模型标绘
- -->
 <template>
   <div id="markerContainer" :style="{left:winPos.x+'px',top:winPos.y+'px'}">
     <el-dialog :title="markName+'附件'" :visible.sync="dialogVisible" :modal-append-to-body="false">
@@ -48,7 +40,6 @@
                   </template>
                 </el-table-column>
               </el-table>
-
               <!-- <el-main class="marker-main-class">
                         名称：
                         <el-input v-model="markName" ref="nameinput" @keyup.enter.native="update"></el-input>
@@ -93,7 +84,7 @@
               style="background-color:#34495E;color:white;margin-left:5px " @click="cancelMark">取消</el-button>
           </el-col>
           <el-col :span="8">
-            <i class="el-icon-error delete-entity-text"  @click="deleteMark">删除要素</i>
+            <i class="el-icon-error delete-entity-text" @click="deleteMark">删除要素</i>
           </el-col>
         </el-row>
       </el-footer>
@@ -220,6 +211,8 @@ export default {
       self.winPos = self.markerManager.panelPosition();
       self.visible = true;
       // 添加到全局图元管理中
+      console.log(e.detail.position);
+      
       self.$emit("addEvent", e.detail.id, e.detail.name, e.detail.type);
     });
     window.addEventListener("marker-delete", (e) => {
@@ -248,6 +241,10 @@ export default {
     this.$nextTick(() => {
       utils.moveDiv("markerContainer");
     });
+    window.addEventListener("showEntityPop", (e)=>{
+        console.log( e.detail.property);
+        this.propertyData = e.detail.property
+    })
   },
   methods: {
     // 这个方法在父组件中调用的

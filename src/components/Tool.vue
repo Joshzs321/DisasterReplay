@@ -8,6 +8,7 @@
         <!-- <Draw v-if="drawToShow"></Draw> -->
         <CesiumDrawViewer v-if="drawToShow" @closeEvent='closeDrawPanel'></CesiumDrawViewer>
       </div>
+      <!-- 工具条 -->
       <div class="tool-group" v-for="(item,index) in toolSet" :key='index'>
         <div class="tool-header">{{item.group}}</div>
         <div class="tool-item" v-for="(toolItem,toolIndex) in item.content" :key="toolIndex"
@@ -152,8 +153,9 @@ export default {
       Bus.$emit("brotherEvent", "data");
       let windCircle=new WindCircle(window.viewer)
       let typhoonPath=new TyphoonPath(window.viewer)
-      windCircle.loadDate()
-      typhoonPath.loadDate(this.$store.state.typhoonTestData)
+      var typhoonData = this.$store.state.typhoonData
+      windCircle.loadDate(typhoonData)
+      typhoonPath.loadDate(typhoonData)
     },
     handleTooltip() {
       this.tooltipDisable = !this.tooltipDisable;

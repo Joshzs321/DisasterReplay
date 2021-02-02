@@ -3,20 +3,24 @@ class WindCircle {
     constructor(viewer) {
         this.viewer = viewer
     }
-    loadDate() {
-        let windCircleRadius = [["30KTS", "300", "350", "380", "260"], ["50KTS", "130", "130", "140", "130"], ["64KTS", "60", "60", "60", "60"]];
-        let typhoonPoint = { lon: 125.10, lat: 24.30 };
-        this.drawWindCircle(windCircleRadius, typhoonPoint);
+    loadDate(typhoonData) {
+        var formatedData=this.formateData(typhoonData)
+        // 最后一个点没有后续点来设置其endTime,故将其删除
+        formatedData.pop()
+        // let windCircleRadius = [["30KTS", "300", "350", "380", "260"], ["50KTS", "130", "130", "140", "130"], ["64KTS", "60", "60", "60", "60"]];
+        // let typhoonPoint = { lon: 125.10, lat: 24.30 };
+        formatedData.forEach((item)=>{
+            this.drawWindCircle(item.radius, item.position,item.timeConfig);
+        })
+        
     }
     /**
              * 绘制台风风圈
              * @param {Array} windCircleRadius 
              * @param {object} typhoonPoint 
              */
-    drawWindCircle(windCircleRadius, typhoonPoint) {
-
+    drawWindCircle(windCircleRadius, typhoonPoint,timeConfig) {
         for (let m = 0; m < windCircleRadius.length; m++) {
-
             let enRadius = windCircleRadius[m][1] * 1000;
             let esRadius = windCircleRadius[m][2] * 1000;
             let wsRadius = windCircleRadius[m][3] * 1000;
@@ -56,10 +60,13 @@ class WindCircle {
                     outlineWidth: 1,
                     material: circleColor.withAlpha(0.15),
                 },
+                availability : new Cesium.TimeIntervalCollection([new Cesium.TimeInterval({
+                    start :  Cesium.JulianDate.fromIso8601(timeConfig.startTime),
+                    stop : Cesium.JulianDate.fromIso8601(timeConfig.endTime)
+                })]),
                 type: 'windcircle'
             });
             this.viewer.entities.add(windCircle);
-
         }
     }
     /**
@@ -120,6 +127,24 @@ class WindCircle {
             positionArr.push(BWD);
         }
         return positionArr;
+    }
+    formateData(typhoonData){
+        console.log('typhoonData: ', typhoonData);
+
+        var formatedData=[]
+        typhoonData.forEach((element,index,arr) => {
+            var radius = [
+                ["30KTS",element.radius7_quad.ne,element.radius7_quad.se,element.radius7_quad.sw,element.radius7_quad.nw],
+                ["50kTS",element.radius10_quad.ne,element.radius10_quad.se,element.radius10_quad.sw,element.radius10_quad.nw],
+                ["64KTS",element.radius12_quad.ne,element.radius12_quad.se,element.radius12_quad.sw,element.radius12_quad.nw]
+            ]
+            var position = {lon:element.longitude,lat:element.latitude}
+            var timeConfig = {startTime:element.time,endTime:arr[index+1]?arr[index+1].time:undefined}
+            formatedData.push({
+                radius,position,timeConfig
+            })
+        });
+        return formatedData
     }
 }
 export default WindCircle

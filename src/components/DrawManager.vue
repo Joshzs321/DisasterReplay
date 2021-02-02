@@ -1,11 +1,4 @@
-<!--
- * @Author: zhangbo
- * @E-mail: xtfge_0915@163.com
- * @Date: 2019-12-23 16:34:02
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-04-17 14:04:54
- * @Desc: 
- -->
+
 <template>
   <div class="layer-manager-box" id="layer-manager-box">
     <div class="layer-manager-header" id="layer-manager-header">
@@ -57,7 +50,8 @@
               :class="[tool.icon]"
               :title="tool.text"
               @click="tool.action(data)"
-            ></i>
+            >
+            </i>
           </span>
         </span>
       </el-tree>

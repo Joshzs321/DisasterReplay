@@ -110,7 +110,7 @@ export default {
   data() {
     return {
       scenesCreated: [],
-
+      radio:'',
       sceneLevel: [
         {
           value: "GJ",

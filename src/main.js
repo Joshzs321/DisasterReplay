@@ -5,7 +5,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
-import 'jquery'
+// import 'jquery'
 import VueAxios from 'vue-axios'
 import vuescroll from "vuescroll";//引入vuescroll
 import "vuescroll/dist/vuescroll.css";//引入vuescroll样式
@@ -19,6 +19,7 @@ import './plugins/element.js'
 // import './plugins/vueMaterial.js'
 import './assets/CSS/global.css'
 import './assets/CSS/index.css'
+import "./assets/CSS/iconfont.css";
 // 注册库，使所有组件都能使用该库
 // Vue.use(ElementUI);
 // VueAxios是axios的Vue插件

@@ -101,7 +101,7 @@ export default class EntityManager {
         var lng=Cesium.Math.toDegrees(cartographic.longitude);
         property.push({property:'latitude',value:lat},{property:'longitude',value:lng})
         // 获取点击实体的其他属性
-
+            
 
         this.selectedEntityProperty=property
     }

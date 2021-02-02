@@ -13,7 +13,7 @@
             <div id="header-menu-container">
               <el-link icon="el-icon-edit-outline" @click="openCreateEventDialog">事件创建</el-link>
               <el-link icon="el-icon-video-camera" @click="changeTimeLineToShow">事件播放</el-link>
-               <el-link icon="el-icon-document">事件报告</el-link>
+              <el-link icon="el-icon-document">事件报告</el-link>
               <el-link icon="el-icon-s-open" @click="handleMapTool">地图工具</el-link>
             </div>
           </el-col>
@@ -31,7 +31,7 @@
           <Play></Play>
         </div>
         <Tool ref="mapTool" @handlePlotAreaToShow='changePoltAreaContainerToShow'></Tool>
-       <div id="progressTime" :class="TimelineActive?'':'progressTimeControl'"></div>
+        <div id="progressTime" :class="TimelineActive?'':'progressTimeControl'"></div>
       </el-main>
     </el-container>
     <!-- 创建场景面板 -->
@@ -42,7 +42,7 @@
         <el-button type="primary" @click="saveEvent">确 定</el-button>
       </span>
     </el-dialog>
-    
+
   </div>
 </template>
 
@@ -55,11 +55,11 @@ import Play from "./Play.vue";
 import Typhoon from "./Typhoon.vue";
 import Tool from "./Tool.vue";
 import CreateEventDialog from "./CreateEventDialog.vue";
-
+import { request } from "../common/requestApi";
 export default {
   data() {
     return {
-      TimelineActive:false,
+      TimelineActive: false,
       poltAreaContainerToShow: false,
       tableCollpse: true,
       plotAreaToShow: true,
@@ -74,11 +74,10 @@ export default {
     Typhoon,
     Tool,
     CreateEventDialog,
-    
   },
   methods: {
-    changeTimeLineToShow(){
-      this.TimelineActive=!this.TimelineActive
+    changeTimeLineToShow() {
+      this.TimelineActive = !this.TimelineActive;
     },
     handleMapTool() {
       this.$refs.mapTool.changeToolToShow();
@@ -101,7 +100,26 @@ export default {
       // 显示事件树
       // this.treeToshow=true
       this.$refs.eventTree.createTreeNode();
-      this.$refs.eventCreateDialog.scenesCreated=[]
+      // 为了让再点开新建脚本的时候内容是空的
+      this.$refs.eventCreateDialog.scenesCreated = [];
+      // 创建脚本的同时，加载台风路径和属性数据,并保存到vuex中
+      request.loadTyphoon("shanzhu", (data) => {
+        this.$store.commit("setTyphoonTestData", data);
+      });
+      // 测试开启时间：后面要放到其他地方进行合理的逻辑控制
+      var viewer = window.viewer;
+      console.log('window.viewer: ', window.viewer);
+      viewer.clock.startTime = Cesium.JulianDate.fromIso8601(
+        "2018-09-07T20:00:00"
+      );
+      viewer.clock.stopTime = Cesium.JulianDate.fromIso8601(
+        "2018-09-17T13:00:00"
+      );
+      viewer.clock.currentTime = Cesium.JulianDate.fromIso8601(
+        "2018-09-07T20:00:00"
+      );
+      viewer.clock.multiplier = 400
+      viewer.clock.shouldAnimate= true
     },
     changePlotAreaToShow() {
       this.plotAreaToShow = !this.plotAreaToShow;
@@ -117,7 +135,7 @@ export default {
   bottom: 0;
   width: 99.8%;
 }
-.progressTimeControl{
+.progressTimeControl {
   z-index: -1;
 }
 
